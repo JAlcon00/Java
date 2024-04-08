@@ -1,61 +1,64 @@
 package Pilas.HanoiTower;
 
-import java.util.*;
+import java.util.Scanner;
+import java.util.Stack;
 
-public class HanoiTower {
-    static Stack<Integer>[] towers = new Stack[3];
-    static int moves = 0;
-
+public class HanoiTower{
     public static void main(String[] args) {
-
         Scanner scanner = new Scanner(System.in);
-        towers[0] = new Stack<>();
-        towers[1] = new Stack<>();
-        towers[2] = new Stack<>();
-
-        System.out.println("Ingrese el número de discos: ");
-        int n = scanner.nextInt();
-
-        for (int i = 0; i < n; i++) {
-            towers[0].push(i);
-        }
-        printTowers();
-
-        hanoi(n, 0, 2, 1);
-
-    }
-
-    public static void hanoi(int n, int from, int to, int aux) {
-        if (n == 1) {
-            towers[to].push(towers[from].pop());
-            printTowers();
-            return;
-        }
-        hanoi(n - 1, from, aux, to);
-        towers[to].push(towers[from].pop());
-        printTowers();
-        hanoi(n - 1, aux, to, from);
-    }
-
-    static void moveDisk(int from, int to) {
-        int disk = towers[from].pop();
-        towers[to].push(disk);
-        System.out.println("Mover disco " + disk + " de torre " + (from + 1) + " a torre " + (to + 1));
-
-    }
-
-    static void printTowers() {
-        System.out.println("Estado actual de las torres");
-        for (int i = 0; i < 3; i++) {
-            System.out.println("Torre " + (i + 1) + ": " + towers[i]);
-            for(int disk : towers[i]){
-                System.out.println(disk + " ");
-
-
-            }
-            System.out.println();
-        }
-        System.out.println("------------------------------------------");
         
+        System.out.print("Ingrese la cantidad de discos: ");
+        int cantidadDiscos = scanner.nextInt();
+        
+        moverTorreHanoi(cantidadDiscos);
+    }
+    
+    public static void moverTorreHanoi(int n) {
+        Stack<Integer> torreA = new Stack<>();
+        Stack<Integer> torreB = new Stack<>();
+        Stack<Integer> torreC = new Stack<>();
+        
+        // Llenar la torre A con discos
+        for (int i = n; i > 0; i--) {
+            torreA.push(i);
+        }
+        
+        boolean esPar = (n % 2 == 0);
+        int movimientos = (int) (Math.pow(2, n) - 1);
+        
+        for (int i = 1; i <= movimientos; i++) {
+            if (i % 3 == 1) {
+                moverDiscos(torreA, torreC, esPar);
+            } else if (i % 3 == 2) {
+                moverDiscos(torreA, torreB, esPar);
+            } else if (i % 3 == 0) {
+                moverDiscos(torreB, torreC, esPar);
+            }
+            
+            imprimirTorres(torreA, torreB, torreC);
+        }
+    }
+    
+    public static void moverDiscos(Stack<Integer> origen, Stack<Integer> destino, boolean esPar) {
+        if (esPar) {
+            if (origen.isEmpty() || (!destino.isEmpty() && destino.peek() < origen.peek())) {
+                destino.push(origen.pop());
+            } else {
+                origen.push(destino.pop());
+            }
+        } else {
+            if (origen.isEmpty() || (!destino.isEmpty() && destino.peek() < origen.peek())) {
+                origen.push(destino.pop());
+            } else {
+                destino.push(origen.pop());
+            }
+        }
+    }
+    
+    public static void imprimirTorres(Stack<Integer> torreA, Stack<Integer> torreB, Stack<Integer> torreC) {
+        System.out.println("Torre 1: " + torreA);
+        System.out.println("Torre 2: " + torreB);
+        System.out.println("Torre 3: " + torreC);
+        System.out.println();
     }
 }

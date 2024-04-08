@@ -97,7 +97,7 @@ public class Acciones {
                     + ", se encuentra a cargo de: " + Nodo_actual.tarea.Encargado
                     + ", tiene un prioridad de: " + Nodo_actual.tarea.Prioridad);
             if(Nodo_actual.siguiente == null){
-                break;
+                 break;
             }
             Nodo_actual = Nodo_actual.siguiente;
         }
